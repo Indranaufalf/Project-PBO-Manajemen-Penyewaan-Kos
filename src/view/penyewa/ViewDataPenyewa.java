@@ -24,7 +24,7 @@ public class ViewDataPenyewa extends JPanel {
     private JButton btnTambah, btnUpdate, btnHapus, btnBersih, btnCari;
     private int idTerpilih = -1;
     private Runnable onBack;
-    private Runnable onPenyewaChanged; // callback untuk refresh tab transaksi
+    private Runnable onPenyewaChanged; 
 
     private final Color PRIMARY = new Color(30, 41, 59);
     private final Color ACCENT  = new Color(16, 185, 129);
@@ -42,14 +42,11 @@ public class ViewDataPenyewa extends JPanel {
     }
 
     public void setOnBack(Runnable r) { this.onBack = r; }
-    /** Dipanggil saat penyewa ditambah agar tab Transaksi ikut refresh */
     public void setOnPenyewaChanged(Runnable r) { this.onPenyewaChanged = r; }
 
-    /** Refresh dropdown kamar (dipanggil dari Main saat navigasi ke halaman ini) */
     public void refreshKamar() { muatKamar(); }
 
     private void initComponents() {
-        // ---- HEADER ----
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(BG);
         header.setBorder(new EmptyBorder(0, 0, 4, 0));
@@ -68,7 +65,6 @@ public class ViewDataPenyewa extends JPanel {
         header.add(btnBack, BorderLayout.WEST);
         header.add(lblHeader, BorderLayout.CENTER);
 
-        // ---- FORM ----
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -78,25 +74,21 @@ public class ViewDataPenyewa extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Row 0: Nama & NIK
         gbc.gridx = 0; gbc.gridy = 0; formPanel.add(lbl("Nama Lengkap:"), gbc);
         gbc.gridx = 1; txtNama = field(); formPanel.add(txtNama, gbc);
         gbc.gridx = 2; formPanel.add(lbl("NIK (KTP):"), gbc);
         gbc.gridx = 3; txtNik = field(); formPanel.add(txtNik, gbc);
 
-        // Row 1: No HP & Email
         gbc.gridx = 0; gbc.gridy = 1; formPanel.add(lbl("No. HP:"), gbc);
         gbc.gridx = 1; txtNoHp = field(); formPanel.add(txtNoHp, gbc);
         gbc.gridx = 2; formPanel.add(lbl("Email:"), gbc);
         gbc.gridx = 3; txtEmail = field(); formPanel.add(txtEmail, gbc);
 
-        // Row 2: Alamat & Pekerjaan
         gbc.gridx = 0; gbc.gridy = 2; formPanel.add(lbl("Alamat Asal:"), gbc);
         gbc.gridx = 1; txtAlamat = field(); formPanel.add(txtAlamat, gbc);
         gbc.gridx = 2; formPanel.add(lbl("Pekerjaan:"), gbc);
         gbc.gridx = 3; txtPekerjaan = field(); formPanel.add(txtPekerjaan, gbc);
 
-        // Row 3: Pilih Kamar & Durasi Sewa (baru)
         gbc.gridx = 0; gbc.gridy = 3; formPanel.add(lbl("Pilih Kamar:"), gbc);
         gbc.gridx = 1;
         cbKamar = new JComboBox<>();
@@ -110,7 +102,6 @@ public class ViewDataPenyewa extends JPanel {
         spDurasi.setPreferredSize(new Dimension(80, 28));
         formPanel.add(spDurasi, gbc);
 
-        // Row 4: Info harga & total otomatis
         gbc.gridx = 0; gbc.gridy = 4; formPanel.add(lbl("Harga/Bulan:"), gbc);
         gbc.gridx = 1;
         lblHarga = new JLabel("Rp 0");
@@ -125,19 +116,10 @@ public class ViewDataPenyewa extends JPanel {
         lblTotal.setForeground(ACCENT);
         formPanel.add(lblTotal, gbc);
 
-        // Baru dipanggil di sini, setelah lblHarga & lblTotal sudah diinisialisasi
         muatKamar();
 
-        // Row 5: Badge info transaksi otomatis
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 4;
-//        JLabel lblInfo = new JLabel(
-//            "ℹ  Saat klik Tambah, transaksi akan otomatis dibuat dengan status Belum Lunas");
-//        lblInfo.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-//        lblInfo.setForeground(new Color(100, 116, 139));
-//        formPanel.add(lblInfo, gbc);
-//        gbc.gridwidth = 1;
 
-        // Row 6: Tombol + Cari
         JPanel panelBtn = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         panelBtn.setBackground(Color.WHITE);
         btnTambah = btn("Tambah"); btnUpdate = btn("Update");
@@ -165,7 +147,6 @@ public class ViewDataPenyewa extends JPanel {
         topPanel.add(formPanel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        // ---- TABEL ----
         tableModel = new ModelTablePenyewa(new ArrayList<>());
         tabel = new JTable(tableModel);
         tabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -182,7 +163,6 @@ public class ViewDataPenyewa extends JPanel {
         tabel.getTableHeader().setOpaque(true);
         tabel.getTableHeader().setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, BORDER));
 
-        // Kolom Kamar (index 7) diberi warna berbeda untuk mudah dibaca
         tabel.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable t, Object val, boolean sel,
@@ -199,7 +179,6 @@ public class ViewDataPenyewa extends JPanel {
         scroll.setBorder(BorderFactory.createLineBorder(BORDER));
         add(scroll, BorderLayout.CENTER);
 
-        // ---- EVENT LISTENERS ----
         cbKamar.addActionListener(e  -> hitungTotal());
         spDurasi.addChangeListener(e -> hitungTotal());
 
@@ -222,7 +201,7 @@ public class ViewDataPenyewa extends JPanel {
                 txtEmail.setText(p.getEmail());
                 txtAlamat.setText(p.getAlamatAsal());
                 txtPekerjaan.setText(p.getPekerjaan());
-                // Pilih kamar yang sesuai di ComboBox
+
                 for (int i = 0; i < cbKamar.getItemCount(); i++) {
                     ModelKamar k = cbKamar.getItemAt(i);
                     if (k != null && k.getIdKamar() == p.getIdKamar()) {
@@ -235,10 +214,8 @@ public class ViewDataPenyewa extends JPanel {
 
     private void muatKamar() {
         cbKamar.removeAllItems();
-        // Tambah opsi kosong
         cbKamar.addItem(null);
         for (ModelKamar k : ctrlKamar.getAllKamar()) cbKamar.addItem(k);
-        // Custom renderer supaya null ditampilkan sebagai "-- Pilih Kamar --"
         cbKamar.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object val,
@@ -289,7 +266,7 @@ public class ViewDataPenyewa extends JPanel {
                 "Penyewa berhasil ditambahkan!\nTransaksi sewa otomatis dibuat dengan status Belum Lunas.");
             loadData();
             bersihForm();
-            muatKamar(); // refresh kamar supaya status Terisi terupdate
+            muatKamar(); 
             if (onPenyewaChanged != null) onPenyewaChanged.run();
         } else {
             JOptionPane.showMessageDialog(this,

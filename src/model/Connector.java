@@ -32,7 +32,6 @@ public class Connector {
     }
 
     private static void showErrorDialog(String pesan) {
-        // Tampilkan dialog error supaya tidak diam-diam gagal
         javax.swing.SwingUtilities.invokeLater(() ->
             javax.swing.JOptionPane.showMessageDialog(null, pesan, "Error Koneksi Database",
                 javax.swing.JOptionPane.ERROR_MESSAGE));

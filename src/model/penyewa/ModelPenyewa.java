@@ -2,11 +2,6 @@ package model.penyewa;
 
 import model.BaseModel;
 
-/**
- * ModelPenyewa — merepresentasikan data satu penyewa kos.
- *
- * Ditambahkan: idKamar dan nomorKamar agar penyewa terhubung langsung ke kamar.
- */
 public class ModelPenyewa extends BaseModel {
 
     private String nama;
@@ -15,8 +10,8 @@ public class ModelPenyewa extends BaseModel {
     private String email;
     private String alamatAsal;
     private String pekerjaan;
-    private int    idKamar;      // relasi ke kamar yang dipilih
-    private String nomorKamar;   // untuk tampilan langsung di tabel
+    private int    idKamar;     
+    private String nomorKamar;   
 
     public ModelPenyewa() {
         super();
@@ -36,15 +31,13 @@ public class ModelPenyewa extends BaseModel {
         this.nomorKamar = nomorKamar;
     }
 
-    // Konstruktor lama untuk backward-compat
     public ModelPenyewa(int idPenyewa, String nama, String nik, String noHp,
                         String email, String alamatAsal, String pekerjaan) {
         this(idPenyewa, nama, nik, noHp, email, alamatAsal, pekerjaan, 0, "-");
     }
 
-    /** @deprecated Gunakan getId() dari BaseModel */
     public int  getIdPenyewa()      { return getId(); }
-    /** @deprecated Gunakan setId() dari BaseModel */
+
     public void setIdPenyewa(int i) { setId(i); }
 
     public String getNama()             { return nama; }

@@ -5,31 +5,15 @@ import model.kamar.InterfaceDAOKamar;
 import model.kamar.ModelKamar;
 import java.util.List;
 
-/**
- * ControllerKamar — jembatan antara View dan lapisan data (DAO) untuk entitas Kamar.
- *
- * Polymorphism: field dao bertipe InterfaceDAOKamar (interface), bukan DAOKamar
- *               (kelas konkret). Artinya di masa depan implementasi bisa diganti
- *               (misal DAOKamarFake untuk testing) tanpa mengubah kode ini sama sekali.
- *
- * Validasi input diperkuat: harga tidak boleh nol/negatif.
- */
 public class ControllerKamar {
 
-    // Polymorphism: dideklarasikan sebagai interface, bukan kelas konkret
+    // Polymorphism
     private final InterfaceDAOKamar dao;
 
-    /** Konstruktor default — memakai implementasi database sungguhan. */
     public ControllerKamar() {
         this.dao = new DAOKamar();
     }
 
-    /**
-     * Konstruktor dengan dependency injection.
-     * Memungkinkan penggantian implementasi DAO dari luar (misal untuk unit test).
-     *
-     * @param dao implementasi InterfaceDAOKamar yang akan digunakan
-     */
     public ControllerKamar(InterfaceDAOKamar dao) {
         this.dao = dao;
     }

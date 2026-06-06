@@ -11,10 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * ControllerPenyewa — mengelola penyewa dan otomatis buat transaksi
- * dengan status "Belum Lunas" saat penyewa baru ditambahkan.
- */
+
 public class ControllerPenyewa {
 
     private final InterfaceDAOPenyewa    dao;
@@ -33,13 +30,6 @@ public class ControllerPenyewa {
         this.ctrlKamar    = new ControllerKamar();
     }
 
-    /**
-     * Tambah penyewa baru beserta kamar yang dipilih.
-     * Otomatis membuat transaksi dengan status "Belum Lunas".
-     *
-     * @param durasiBulan durasi sewa (bulan), minimal 1
-     * @param idKamar     ID kamar yang dipilih (> 0)
-     */
     public boolean tambahPenyewa(String nama, String nik, String noHp,
                                   String email, String alamat, String pekerjaan,
                                   int idKamar, int durasiBulan) {
@@ -57,11 +47,9 @@ public class ControllerPenyewa {
         boolean ok = dao.tambah(p);
         if (!ok) return false;
 
-        // Ambil ID penyewa yang baru saja dibuat
         ModelPenyewa baru = cariPenyewaByNik(nik.trim());
-        if (baru == null) return true; // penyewa tersimpan walau transaksi gagal dibuat
+        if (baru == null) return true; 
 
-        // Buat transaksi otomatis: mulai hari ini, status Belum Lunas
         Date tglMasuk = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(tglMasuk);
@@ -76,13 +64,11 @@ public class ControllerPenyewa {
             total, "Belum Lunas", "Transaksi otomatis saat pendaftaran");
         daoTransaksi.tambah(t);
 
-        // Update status kamar menjadi Terisi
         ctrlKamar.updateStatusKamar(idKamar, "Terisi");
 
         return true;
     }
 
-    /** Backward-compat tanpa kamar (tidak membuat transaksi otomatis) */
     public boolean tambahPenyewa(String nama, String nik, String noHp,
                                   String email, String alamat, String pekerjaan) {
         if (nama == null || nama.trim().isEmpty()) return false;

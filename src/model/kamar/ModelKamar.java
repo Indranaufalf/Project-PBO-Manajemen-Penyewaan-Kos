@@ -2,12 +2,6 @@ package model.kamar;
 
 import model.BaseModel;
 
-/**
- * ModelKamar — merepresentasikan data satu kamar kos.
- *
- * Inheritance : extends BaseModel, mewarisi field id dan method getId/setId.
- * Polymorphism: meng-override getInfoSingkat() sesuai konteks kamar.
- */
 public class ModelKamar extends BaseModel {
 
     private String nomorKamar;
@@ -32,11 +26,7 @@ public class ModelKamar extends BaseModel {
         this.keterangan   = keterangan;
     }
 
-    // --- getter/setter field spesifik kamar ---
-
-    /** @deprecated Gunakan getId() dari BaseModel */
     public int getIdKamar()              { return getId(); }
-    /** @deprecated Gunakan setId() dari BaseModel */
     public void setIdKamar(int id)       { setId(id); }
 
     public String getNomorKamar()                  { return nomorKamar; }
@@ -57,7 +47,6 @@ public class ModelKamar extends BaseModel {
     public String getKeterangan()           { return keterangan; }
     public void   setKeterangan(String k)   { this.keterangan = k; }
 
-    // --- implementasi method abstract dari BaseModel (polymorphism) ---
 
     @Override
     public String getInfoSingkat() {
@@ -66,7 +55,6 @@ public class ModelKamar extends BaseModel {
              + " - " + status;
     }
 
-    /** Dipakai ComboBox di View — tampilkan nomor & tipe saja. */
     @Override
     public String toString() {
         return nomorKamar + " - " + tipe;

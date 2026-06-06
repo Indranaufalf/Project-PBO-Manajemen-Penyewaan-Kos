@@ -62,7 +62,6 @@ public class ModelTransaksi extends BaseModel {
     public int    getDurasiBulan()           { return durasiBulan; }
     public void   setDurasiBulan(int n)      { this.durasiBulan = n; }
 
-    /** Alias untuk backward-compat dengan DAOTransaksi lama. */
     public int    getDurasiBuilan()          { return durasiBulan; }
     public void   setDurasiBuilan(int n)     { this.durasiBulan = n; }
 
@@ -75,7 +74,6 @@ public class ModelTransaksi extends BaseModel {
     public String getKeterangan()            { return keterangan; }
     public void   setKeterangan(String s)    { this.keterangan = s; }
 
-    // --- implementasi method abstract dari BaseModel (polymorphism) ---
 
     @Override
     public String getInfoSingkat() {

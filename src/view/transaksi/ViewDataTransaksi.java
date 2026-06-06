@@ -12,21 +12,6 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
-/**
- * ViewDataTransaksi — tampilan manajemen transaksi sewa.
- *
- * Perbaikan:
- *  1. refreshKamar() sekarang public — dipanggil dari Main saat buka halaman ini,
- *     sehingga kamar yang baru ditambah selalu muncul di dropdown.
- *  2. muatKamar() menggunakan getAllKamar() (bukan getKamarTersedia()) supaya
- *     saat klik baris transaksi lama, kamar yang sudah "Terisi" tetap bisa
- *     dipilih untuk diedit/dihapus.
- *  3. Setelah Tambah/Hapus: refreshKamar() dipanggil ulang supaya status
- *     Terisi/Tersedia langsung terefleksi di dropdown.
- *  4. Logic status otomatis (real-time): saat loadData() dipanggil, kamar
- *     yang tanggal keluarnya sudah lewat hari ini otomatis dikembalikan
- *     ke "Tersedia" lewat ControllerTransaksi.cekDanUpdateStatusKamarKadaluarsa().
- */
 public class ViewDataTransaksi extends JPanel {
 
     private ControllerTransaksi ctrlTransaksi;
@@ -190,7 +175,6 @@ public class ViewDataTransaksi extends JPanel {
                 if (row < 0) return;
                 ModelTransaksi t = tableModel.getTransaksiAt(row);
                 idTerpilih = t.getIdTransaksi();
-                // Pilih kamar di combobox berdasarkan id — semua kamar dimuat agar bisa ditemukan
                 for (int i = 0; i < cbKamar.getItemCount(); i++)
                     if (cbKamar.getItemAt(i).getIdKamar() == t.getIdKamar()) {
                         cbKamar.setSelectedIndex(i); break;
@@ -291,7 +275,7 @@ public class ViewDataTransaksi extends JPanel {
             if (ctrlTransaksi.hapusTransaksi(idTerpilih)) {
                 JOptionPane.showMessageDialog(this, "Transaksi berhasil dihapus!");
                 loadData(); bersihForm();
-                muatKamar(); // refresh dropdown kamar supaya status Tersedia kembali muncul
+                muatKamar(); 
             }
         }
     }
@@ -305,27 +289,15 @@ public class ViewDataTransaksi extends JPanel {
         tabel.clearSelection();
     }
 
-    /**
-     * Load ulang tabel transaksi + jalankan cek otomatis status kamar kadaluarsa.
-     * Ini yang menjawab: "transaksi tgl keluar 2024 tapi kamar masih Terisi"
-     */
     public void loadData() {
-        // Cek dan update kamar yang masa sewanya sudah habis sebelum render tabel
         ctrlTransaksi.cekDanUpdateStatusKamarKadaluarsa();
         tableModel.setData(ctrlTransaksi.getAllTransaksi());
     }
 
-    /** Dipanggil dari Main saat navigasi ke halaman transaksi — refresh dropdown penyewa */
     public void refreshPenyewa() { muatPenyewa(); }
 
-    /** Dipanggil dari Main saat navigasi ke halaman transaksi — refresh dropdown kamar */
     public void refreshKamar() { muatKamar(); }
 
-    /**
-     * muatKamar menggunakan getAllKamar() (BUKAN getKamarTersedia()).
-     * Alasan: saat klik baris transaksi untuk edit/hapus, kamar yang sudah
-     * "Terisi" harus tetap bisa dipilih di combobox.
-     */
     private void muatKamar() {
         cbKamar.removeAllItems();
         for (ModelKamar k : ctrlKamar.getAllKamar()) cbKamar.addItem(k);
